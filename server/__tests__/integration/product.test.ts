@@ -12,15 +12,35 @@ describe('product testing', () => {
     })
   })
 
-  it('should create one product in database', async done => {
-    const response = await request
+  afterAll(async () => {
+    await mongoose.connection.close()
+  })
+
+  afterEach(async () => {
+    await mongoose.connection.db.dropDatabase()
+  })
+
+  it('should create one product in database', async () => {
+    const { status } = await request
       .post('/products')
       .send({
         name: 'Arroz',
         price: 2.45,
-        image_url: 'https://test.com/bla.png'
+        imageUrl: 'https://test.com/bla.png'
       })
-    expect(response.status).toBe(201)
-    done()
+
+    expect(status).toBe(201)
+  })
+
+  it('should fail when trying to create a product with invalid fields', async () => {
+    const { status } = await request
+      .post('/products')
+      .send({
+        nam: 'Arroz',
+        price: 'sdadasdasd',
+        imageUrl: 'https://test.com/bla.png'
+      })
+
+    expect(status).toBe(400)
   })
 })

@@ -3,6 +3,8 @@ import express, { Application } from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 
+import routes from './routes'
+
 class App {
   server: Application
 
@@ -15,6 +17,7 @@ class App {
   middlewares () {
     this.server.use(cors())
     this.server.use(express.json())
+    this.server.use('/api', routes)
   }
 
   database () {
