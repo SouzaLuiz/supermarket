@@ -4,6 +4,22 @@ import Product from '../models/Product'
 import { realToCents } from '../utils/convertsMoney'
 
 class ProductController {
+  async index (req: Request, res: Response) {
+    const limit = req.query.limit as any || 10
+    const page = req.query.page as any || 1
+    const skip = limit * (page - 1)
+
+    try {
+      const products = await Product.find()
+        .limit(Number(limit))
+        .skip(skip)
+
+      return res.json(products)
+    } catch (error) {
+      return res.status(400).send()
+    }
+  }
+
   async store (req: Request, res: Response) {
     const schema = Joi.object({
       name: Joi.string().required(),

@@ -4,7 +4,7 @@ module.exports = {
   clearMocks: true,
   testEnvironment: 'node',
   testMatch: [
-    '**/__tests__/**/*.[jt]s?(x)'
+    '**/__tests__/**/*.test.[jt]s?(x)'
   ],
   testPathIgnorePatterns: [
     '/node_modules/'

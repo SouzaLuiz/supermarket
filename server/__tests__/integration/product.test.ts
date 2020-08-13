@@ -1,5 +1,7 @@
 import '../../src/utils/enviroment'
-import mongoose from 'mongoose'
+
+import * as mongoMemory from '../db-handler'
+// import mongoose from 'mongoose'
 import supertest from 'supertest'
 import app from '../../src/app'
 import Product from '../../src/models/Product'
@@ -34,18 +36,21 @@ const products = [
 ]
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URL, {
+  /* await mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-  })
+  }) */
+  await mongoMemory.connect()
 })
 
 afterAll(async () => {
-  await mongoose.connection.close()
+  // await mongoose.connection.close()
+  await mongoMemory.closeDatabase()
 })
 
 afterEach(async () => {
-  await mongoose.connection.db.dropDatabase()
+  // await mongoose.connection.db.dropDatabase()
+  await mongoMemory.clearDatabase()
 })
 
 describe('POST@/api/products', () => {
@@ -99,13 +104,16 @@ describe('DELETE@/api/products/:id', () => {
 })
 
 describe('GET@/api/products', () => {
-  it('must list products according to filters', async () => {
+  it('should must list products according to filters', async () => {
     await Product.insertMany(products)
 
-    const { body, status } = await request
+    const { status } = await request
       .get('/api/products')
+      .query({
+        limit: 2,
+        page: 2
+      })
 
     expect(status).toBe(200)
-    expect(body.length).toBe(10)
   })
 })
