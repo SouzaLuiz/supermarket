@@ -1,5 +1,6 @@
 import { Response, Request } from 'express'
 import Joi from '@hapi/joi'
+import mongoose from 'mongoose'
 import Product from '../models/Product'
 import { realToCents } from '../utils/convertsMoney'
 
@@ -7,16 +8,40 @@ class ProductController {
   async index (req: Request, res: Response) {
     const limit = req.query.limit as any || 10
     const page = req.query.page as any || 1
+    const name = req.query.name as string
     const skip = limit * (page - 1)
 
     try {
-      const products = await Product.find()
+      let total: number
+
+      if (!name) total = await Product.countDocuments()
+      else total = await Product.countDocuments({ name })
+
+      const products = await Product.find(!name ? {} : { name })
+        .select('_id name price imageUrl')
         .limit(Number(limit))
         .skip(skip)
 
-      return res.json(products)
+      return res.json({ total, products })
     } catch (error) {
       return res.status(400).send()
+    }
+  }
+
+  async show (req: Request, res: Response) {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid object id' })
+    }
+
+    try {
+      const product = await Product.findOne({ _id: id })
+        .select('_id name price imageUrl')
+
+      return res.json(product)
+    } catch (error) {
+      return res.status(400).json({ error })
     }
   }
 
@@ -44,25 +69,48 @@ class ProductController {
     }
   }
 
-  async delete (req: Request, res: Response) {
+  async update (req: Request, res: Response) {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: 'Invalid object id' })
+    }
+
     const schema = Joi.object({
-      id: Joi.required()
+      name: Joi.string(),
+      price: Joi.number(),
+      imageUrl: Joi.string()
     })
 
-    const validation = await schema.validateAsync(req.params)
+    try {
+      await schema.validateAsync(req.body)
 
-    if (!validation) {
-      return res.status(400).send()
+      if (req.body.price) {
+        const { price } = req.body
+        req.body.price = realToCents(price)
+      }
+
+      const product = await Product.findOneAndUpdate({ _id: req.params.id }, req.body)
+
+      return res.status(204).json(product)
+    } catch (error) {
+      return res.status(400).json({ error })
     }
+  }
 
+  async delete (req: Request, res: Response) {
     const { id } = req.params
 
-    try {
-      await Product.findByIdAndDelete(id)
-      return res.status(204).send()
-    } catch (error) {
-      return res.status(400).send()
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid object id' })
     }
+
+    const product = await Product.findOne({ _id: id })
+
+    if (!product) {
+      return res.status(400).json({ error: 'Product not found!' })
+    }
+
+    await product.deleteOne()
+    return res.status(204).send()
   }
 }
 

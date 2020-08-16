@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "yarn build && dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only --no-notify src/server.ts",
-    "test": "NODE_ENV=test jest --forceExit --detectOpenHandles --runInBand"
+    "test": "jest --forceExit --detectOpenHandles --runInBand"
   },
   "devDependencies": {
     "@types/cors": "^2.8.7",
