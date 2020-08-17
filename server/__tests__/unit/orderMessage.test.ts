@@ -1,4 +1,4 @@
-import products from './products'
+import products from './order'
 import formatMessage from '../../src/utils/formatMessage'
 
 const data = {
@@ -38,7 +38,6 @@ Total a pagar: R$ 33.47`
 describe('actions when placing order', () => {
   it('this should create an order and send to the telegram', async () => {
     const expectMessage = formatMessage(data)
-    console.log(expectMessage)
     expect(expectMessage).toBe(message)
   })
 })

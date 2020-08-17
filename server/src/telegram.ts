@@ -19,3 +19,5 @@ bot.onText(/\/start/, async (msg) => {
 
   bot.sendMessage(chatId, 'Cadastrado no sistema!')
 })
+
+export default bot
