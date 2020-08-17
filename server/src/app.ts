@@ -1,4 +1,5 @@
 import './utils/enviroment'
+import './telegram'
 import express, { Application } from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
