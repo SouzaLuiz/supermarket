@@ -1,9 +1,9 @@
 import supertest from 'supertest'
 
-import app from '../../src/app'
-import Product from '../../src/models/Product'
+import app from '@src/app'
+import Product from '@models/Product'
 import * as mongoMemory from '../databaseHandler'
-import products from './products'
+import products from '../products'
 
 const request = supertest(app)
 

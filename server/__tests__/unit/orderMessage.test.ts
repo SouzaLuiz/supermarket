@@ -1,5 +1,4 @@
-import products from './order'
-import formatMessage from '../../src/utils/formatMessage'
+import formatMessage from '@utils/formatMessage'
 
 const data = {
   clientInfo: {
@@ -8,7 +7,23 @@ const data = {
     telephone: '92992547364',
     complement: ' '
   },
-  products
+  products: [
+    {
+      name: 'Arroz',
+      price: 2.45,
+      quantity: 2
+    },
+    {
+      name: 'Feijão',
+      price: 4.45,
+      quantity: 4
+    },
+    {
+      name: 'Macarrão',
+      price: 3.59,
+      quantity: 3
+    }
+  ]
 }
 
 const message =

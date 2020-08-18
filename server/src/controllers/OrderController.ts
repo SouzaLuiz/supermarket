@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import bot from '../telegram'
-import Chat from '../models/Chat'
-import Product from '../models/Product'
-import formatMessage from '../utils/formatMessage'
+import Chat from '@models/Chat'
+import Product from '@models/Product'
+import formatMessage from '@utils/formatMessage'
 
 class OrderController {
   async store (req:Request, res:Response) {
@@ -13,7 +13,7 @@ class OrderController {
     })
 
     try {
-      const [chat]: any = await Chat.find()
+      const [{ chatId }]: any = await Chat.find()
 
       const products = await Product.find()
         .where('_id')
@@ -37,7 +37,7 @@ class OrderController {
 
       const message = formatMessage(data)
 
-      bot.sendMessage(chat.chatId, message)
+      bot.sendMessage(chatId, message)
 
       return res.status(200).send(ids)
     } catch (error) {

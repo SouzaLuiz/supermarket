@@ -1,8 +1,8 @@
 import { Response, Request } from 'express'
 import Joi from '@hapi/joi'
 import mongoose from 'mongoose'
-import Product from '../models/Product'
-import { realToCents } from '../utils/convertsMoney'
+import Product from '@models/Product'
+import realToCents from '@utils/convertsMoney'
 
 class ProductController {
   async index (req: Request, res: Response) {

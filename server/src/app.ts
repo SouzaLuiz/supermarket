@@ -1,4 +1,5 @@
 import './utils/enviroment'
+import './utils/moduleAlias'
 import './telegram'
 import express, { Application } from 'express'
 import mongoose from 'mongoose'

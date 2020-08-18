@@ -1,6 +1,5 @@
-import './utils/enviroment'
 import TelegramBot from 'node-telegram-bot-api'
-import Chat from './models/Chat'
+import Chat from '@models/Chat'
 
 const token = process.env.TELEGRAM_TOKEN as any
 
@@ -8,7 +7,7 @@ const bot = new TelegramBot(token, { polling: true })
 
 bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id
-
+  // console.log(chatId)
   const [exists] = await Chat.find()
 
   if (exists) {

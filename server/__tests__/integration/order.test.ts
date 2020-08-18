@@ -1,10 +1,10 @@
 import supertest from 'supertest'
 
-import app from '../../src/app'
-import Product from '../../src/models/Product'
-import Chat from '../../src/models/Chat'
+import app from '@src/app'
+import Product from '@models/Product'
+import Chat from '@models/Chat'
 import * as mongoMemory from '../databaseHandler'
-import productsOrder from './productsOrder'
+import productsOrder from '../products'
 
 const request = supertest(app)
 
@@ -22,7 +22,7 @@ afterEach(async () => {
 
 describe('this deals with how orders are handled', () => {
   beforeEach(async () => {
-    const chatId = 205279330
+    const chatId = process.env.TELEGRAM_CHAT_ID
 
     await Chat.create({ chatId })
   })
