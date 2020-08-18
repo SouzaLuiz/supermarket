@@ -35,14 +35,14 @@ class ProductController {
       return res.status(400).json({ error: 'Invalid object id' })
     }
 
-    try {
-      const product = await Product.findOne({ _id: id })
-        .select('_id name price imageUrl')
+    const product = await Product.findOne({ _id: id })
+      .select('_id name price imageUrl')
 
-      return res.json(product)
-    } catch (error) {
-      return res.status(400).json({ error })
+    if (!product) {
+      return res.status(400).json({ error: 'Product not found!' })
     }
+
+    return res.json(product)
   }
 
   async store (req: Request, res: Response) {
